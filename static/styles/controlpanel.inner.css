@@ -1,0 +1,94 @@
+@import './acorn.css';
+
+:host {
+  color-scheme: light dark;
+
+  .wrapper {
+    display: flex;
+    font: message-box;
+    inset: 0 0 auto 0;
+    justify-content: center;
+    position: fixed;
+    user-select: none;
+
+    .container {
+      align-items: center;
+      background-color: var(--promo-background-color);
+      border-radius: var(--promo-border-radius);
+      border: var(--promo-border);
+      color: var(--promo-message-text-color);
+      display: flex;
+      flex-direction: row;
+      gap: var(--space-xsmall);
+      margin: var(--space-small);
+      min-height: var(--promo-container-min-height);
+      overflow: scroll hidden;
+      padding: var(--space-small);
+
+      .section {
+        align-items: center;
+        display: flex;
+        gap: var(--space-xsmall);
+
+        &:not(:last-child)::after {
+          color: var(--promo-border-color);
+          content: '·';
+        }
+
+        [data-state='error'] &:not(.error-only, .always-show),
+        [data-state='action-bar'] &:not(.action-bar-only, .always-show) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  button {
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font: inherit;
+
+    .button-background {
+      align-items: center;
+      background-color: var(--button-background-color);
+      border-radius: var(--button-border-radius);
+      border: var(--button-border);
+      box-sizing: border-box;
+      color: var(--button-text-color);
+      display: flex;
+      font-size: var(--button-font-size);
+      font-weight: var(--button-font-weight);
+      justify-content: var(--button-alignment);
+      min-height: var(--button-min-height);
+      padding: var(--button-padding);
+      position: relative;
+
+      button:hover > & {
+        background-color: var(--button-background-color-hover);
+        border-color: var(--button-border-color-hover);
+        color: var(--button-text-color-hover);
+      }
+
+      button:hover:active:not(:disabled) > & {
+        background-color: var(--button-background-color-active);
+        border-color: var(--button-border-color-active);
+        color: var(--button-text-color-active);
+      }
+    }
+
+    img {
+      height: 16px;
+      width: 16px;
+
+      @media (prefers-color-scheme: dark) {
+        filter: invert();
+      }
+    }
+  }
+
+  .wordsPerMinute {
+    font-family: monospace;
+  }
+}

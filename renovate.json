@@ -1,0 +1,10 @@
+{
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "groupName": "packages",
+      "schedule": ["after 4am on saturday"],
+      "matchPackageNames": ["/.*/"]
+    }
+  ]
+}

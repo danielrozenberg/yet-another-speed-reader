@@ -1,0 +1,78 @@
+{
+  "extensionName": {
+    "message": "Speed Reader",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "A Firefox extension for speed reading",
+    "description": "Description of the extension."
+  },
+  "contextMenuStart": {
+    "message": "Speed Reader",
+    "description": "Context menu item to start speed reading."
+  },
+  "controlPanelNoSelectionErrorMessage": {
+    "message": "Click on or select some text before activating this extension",
+    "description": "Error message shown in the control panel when the user tries to start a speed reading session without selecting any text."
+  },
+  "controlPanelButtonOpenSettings": {
+    "message": "Open settings",
+    "description": "Tooltip for the button that opens the settings page."
+  },
+  "controlPanelButtonTogglePause": {
+    "message": "Pause/Resume",
+    "description": "Tooltip for the button that toggles pause/resume of the speed reading session."
+  },
+  "controlPanelButtonIncreaseWPM": {
+    "message": "Increase WPM",
+    "description": "Tooltip for the button that increases the words-per-minute (WPM) of the speed reading session."
+  },
+  "controlPanelButtonDecreaseWPM": {
+    "message": "Decrease WPM",
+    "description": "Tooltip for the button that decreases the words-per-minute (WPM) of the speed reading session."
+  },
+  "controlPanelButtonClose": {
+    "message": "Close",
+    "description": "Tooltip for the button that closes the speed reading session."
+  },
+  "optionsPageHighlightSettingsHeader": {
+    "message": "Highlight",
+    "description": "Header for the section of the options page that contains settings related to the highlight."
+  },
+  "optionsPageHighlightBackgroundColorLabel": {
+    "message": "Background color",
+    "description": "Label for the setting that controls the highlight background color."
+  },
+  "optionsPageHighlightTextColorLabel": {
+    "message": "Text color",
+    "description": "Label for the setting that controls the highlight text color."
+  },
+  "optionsPageResetLabel": {
+    "message": "Reset to default",
+    "description": "Label for the button that resets the highlight colors to their default values."
+  },
+  "optionsPageResetButton": {
+    "message": "Reset",
+    "description": "Tooltip for the button that resets the highlight colors to their default values."
+  },
+  "optionsPageDelaySettingsHeader": {
+    "message": "Comfort",
+    "description": "Header for the section of the options page that contains settings related to delays."
+  },
+  "optionsPageShortDelayMultiplierLabel": {
+    "message": "Punctuation delay (e.g., commas, semicolons)",
+    "description": "Label for the setting that controls the multiplier for short delays."
+  },
+  "optionsPageLongDelayMultiplierLabel": {
+    "message": "Sentence delay (e.g., periods, question marks)",
+    "description": "Label for the setting that controls the multiplier for long delays."
+  },
+  "optionsPageHyphenatedWordLengthThresholdLabel": {
+    "message": "Break hyphenated words longer than",
+    "description": "Label for the setting that controls the length threshold for hyphenated words to be treated as multiple words."
+  },
+  "optionsPageHyphenatedWordLengthThresholdUnits": {
+    "message": "characters",
+    "description": "Units for the hyphenated word length threshold setting."
+  }
+}

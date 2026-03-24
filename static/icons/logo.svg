@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+  width="128"
+  height="128"
+  viewBox="0 0 33.866664 33.866664"
+  version="1.1"
+  id="svg1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg">
+  <style>
+    :root {
+    color-scheme: light dark;
+
+    --color: light-dark(#000000, #ffffff);
+    }
+
+    * {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    }
+
+    path {
+    fill: none;
+    stroke: var(--color);
+    stroke-width: 2.11667;
+    }
+
+    circle, rect {
+    fill: var(--color);
+    stroke: none;
+    }
+  </style>
+  <defs
+    id="defs1" />
+  <g
+    id="layer1">
+    <path
+      d="M 33.866666,27.516666 C 24.053006,26.934673 18.095937,22.779921 3.1990577,22.779921"
+      id="path13" />
+    <path
+      d="M 33.866666,27.516666 H 1.4051477"
+      id="path17" />
+    <path
+      id="path16"
+      d="m 11.615252,20.39806 a 15.298861,15.103949 0 0 1 7.64943,-13.0804037 15.298861,15.103949 0 0 1 15.298861,7e-7" />
+    <path
+      d="m 25.247773,1.9645082 h 3.332679"
+      id="path20" />
+    <circle
+      id="path21"
+      cx="26.914112"
+      cy="6.674264"
+      r="1.0583333" />
+    <circle
+      id="circle25"
+      cx="-20.39806"
+      cy="12.938778"
+      transform="rotate(-90)"
+      r="1.0583333" />
+    <path
+      d="M 26.988523,19.979504 21.380478,10.441943"
+      id="path30" />
+    <rect
+      id="rect30"
+      width="2.3818598"
+      height="1.0583333"
+      x="10.556918"
+      y="20.39806" />
+    <path
+      d="M 33.866666,32.808335 H 1.4051477"
+      id="path31" />
+    <path
+      id="path32"
+      d="m -1.4485223,-27.560041 a 2.6024597,2.6024597 0 0 1 -2.2537962,-1.30123 2.6024597,2.6024597 0 0 1 0,-2.602459 2.6024597,2.6024597 0 0 1 2.2537962,-1.30123"
+      transform="scale(-1)" />
+  </g>
+</svg>

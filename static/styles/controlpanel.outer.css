@@ -1,0 +1,24 @@
+#__speed-reader-control-panel {
+  --range-top: 0px;
+  --range-bottom: 0px;
+
+  background: none;
+  border: 0;
+  outline: 0;
+
+  &::backdrop {
+    --background-color: oklch(0 0 0 / 50%);
+    --range-buffer: 1.25em;
+    background: linear-gradient(
+      to bottom,
+      var(--background-color) calc(var(--range-top) - var(--range-buffer)),
+      transparent var(--range-top),
+      transparent var(--range-bottom),
+      var(--background-color) calc(var(--range-bottom) + var(--range-buffer))
+    );
+  }
+
+  html:has(&:open) {
+    overflow: hidden;
+  }
+}
