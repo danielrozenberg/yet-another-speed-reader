@@ -1,11 +1,11 @@
 {
-  "name": "speed-reader",
+  "name": "yet-another-speed-reader",
   "version": "1.0.0",
-  "description": "A Firefox extension for speed reading",
+  "description": "Yet another Firefox extension for speed reading",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/danielrozenberg/speed-reader"
+    "url": "https://github.com/danielrozenberg/yet-another-speed-reader"
   },
   "scripts": {
     "build": "npm run clean && npm run build:static && npm run build:esbuild",
