@@ -7,14 +7,26 @@
   outline: 0;
 
   &::backdrop {
-    --background-color: oklch(0 0 0 / 50%);
-    --range-buffer: 1.25em;
+    --background-color: oklch(0 0 0 / 60%);
+    --range-buffer: 0.25cap;
     background: linear-gradient(
       to bottom,
       var(--background-color) calc(var(--range-top) - var(--range-buffer)),
       transparent var(--range-top),
       transparent var(--range-bottom),
       var(--background-color) calc(var(--range-bottom) + var(--range-buffer))
+    );
+    backdrop-filter: saturate(25%) brightness(80%);
+    clip-path: shape(
+      from 0% 0%,
+      line to 100% 0%,
+      line to 100% calc(var(--range-top) - var(--range-buffer)),
+      line to 0% calc(var(--range-top) - var(--range-buffer)),
+      line to 0% calc(var(--range-bottom) + var(--range-buffer)),
+      line to 100% calc(var(--range-bottom) + var(--range-buffer)),
+      line to 100% 100%,
+      line to 0% 100%,
+      close
     );
   }
 
