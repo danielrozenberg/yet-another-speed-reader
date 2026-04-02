@@ -1,6 +1,6 @@
 {
   "name": "yet-another-speed-reader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Yet another Firefox extension for speed reading",
   "type": "module",
   "repository": {
@@ -29,6 +29,6 @@
     "prettier": "3.8.1",
     "tsx": "4.21.0",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.57.2"
+    "typescript-eslint": "8.58.0"
   }
 }
