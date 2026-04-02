@@ -2,10 +2,10 @@ export class AsyncAbortController implements AbortController {
   #abortController: AbortController;
 
   readonly promise: Promise<void>;
-  readonly #resolve: () => void;
+  readonly #resolve: (value?: undefined) => void;
 
   constructor() {
-    const { promise, resolve } = Promise.withResolvers<void>();
+    const { promise, resolve } = Promise.withResolvers<undefined>();
     this.promise = promise;
     this.#resolve = resolve;
 

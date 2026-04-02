@@ -1,3 +1,5 @@
+import { voidifyAsync } from './common/async';
+
 import type { Browser } from 'webextension-polyfill';
 
 declare const browser: Browser;
@@ -31,14 +33,16 @@ browser.runtime.onMessage.addListener(async (message_: unknown) => {
   }
 });
 
-browser.action.onClicked.addListener(async (tab) => {
-  const tabId = tab.id;
-  if (!tabId) {
-    console.warn('Action button clicked without a valid tab ID.');
-    return;
-  }
-  await startSpeedReader(tabId);
-});
+browser.action.onClicked.addListener(
+  voidifyAsync(async (tab) => {
+    const tabId = tab.id;
+    if (!tabId) {
+      console.warn('Action button clicked without a valid tab ID.');
+      return;
+    }
+    await startSpeedReader(tabId);
+  }),
+);
 
 async function startSpeedReader(tabId: number) {
   try {

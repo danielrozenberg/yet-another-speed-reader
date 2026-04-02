@@ -1,3 +1,4 @@
+import { voidifyAsync } from './common/async';
 import { SettingsController } from './common/settings';
 import { AsyncAbortController } from './content/asyncabortcontroller';
 import { ControlPanel, createOrGetControlPanel } from './content/controlpanel';
@@ -27,13 +28,20 @@ interface Word {
 }
 
 const WORD_CHUNK_MATCHER = /((?:\S\.\s\S{2,})*|\S+)(?:\s+|$)/dgu;
-const HYPHENATED_CHARACTER_MATCHER = /([-\/\\])/;
+const HYPHENATED_CHARACTER_MATCHER = /([-/\\])/;
+const LONG_DELAY_MATCHER = /[.:!?]\W*$/;
+const SHORT_DELAY_MATCHER = /[,;]\W*$/;
+const NON_WORD_MATCHER = /^\W+$/;
 const WPM_DELTA = 10;
 
 const DEFAULT_STATE: State = {
   isPaused: true,
   currentWordIndex: NaN,
 };
+
+function noOpLogger() {
+  /* no-op */
+}
 
 class SpeedReader {
   logger: typeof console.log = console.log;
@@ -49,22 +57,21 @@ class SpeedReader {
   controlPanel: ControlPanel = createOrGetControlPanel();
 
   constructor() {
-    browser.storage.sync.onChanged.addListener(async (changes) => {
-      if ('settings' in changes && changes.settings.newValue) {
-        this.logger('Settings changed:', changes);
-        // Fetch settings from storage to get all values, since the settings do not store default values in storage.
-        const settings = await SettingsController.get();
-        this.updateSettings(settings);
-      }
-    });
+    browser.storage.sync.onChanged.addListener(
+      voidifyAsync(async (changes) => {
+        if ('settings' in changes && changes.settings.newValue) {
+          this.logger('Settings changed:', changes);
+          // Fetch settings from storage to get all values, since the settings do not store default values in storage.
+          const settings = await SettingsController.get();
+          this.updateSettings(settings);
+        }
+      }),
+    );
   }
 
   async startSpeedReading(settings: Settings) {
     const selection = window.getSelection();
-    if (
-      !selection?.anchorNode ||
-      selection.anchorNode.nodeType !== Node.TEXT_NODE
-    ) {
+    if (selection?.anchorNode?.nodeType !== Node.TEXT_NODE) {
       this.controlPanel.showErrorMessage();
       return;
     }
@@ -78,9 +85,13 @@ class SpeedReader {
     this.updateSettings(settings);
     this.state = { isPaused: false, currentWordIndex };
 
-    window.addEventListener('keydown', this.handleKeydown.bind(this), {
-      signal,
-    });
+    window.addEventListener(
+      'keydown',
+      voidifyAsync(this.handleKeydown.bind(this)),
+      {
+        signal,
+      },
+    );
     this.addControlPanelEventListeners(signal);
 
     this.controlPanel.showActionBar();
@@ -99,7 +110,7 @@ class SpeedReader {
   }
 
   updateSettings(settings: Settings) {
-    this.logger = settings.verbose ? console.log : () => {};
+    this.logger = settings.verbose ? console.log : noOpLogger;
     this.logger('Updating settings:', settings);
 
     this.settings = settings;
@@ -131,7 +142,7 @@ class SpeedReader {
 
     let currentWordIndex = 0;
     while (walker.nextNode()) {
-      if (walker.currentNode === selection?.anchorNode) {
+      if (walker.currentNode === selection.anchorNode) {
         currentWordIndex = this.words.length;
       }
 
@@ -145,8 +156,9 @@ class SpeedReader {
       }
 
       for (const match of textContent.matchAll(WORD_CHUNK_MATCHER)) {
-        let [rangeStartOffset, rangeEndOffset] = match.indices?.[1] ?? [];
-        let wordText = match[1] ?? '';
+        let [rangeStartOffset] = match.indices?.[1] ?? [];
+        const [, rangeEndOffset] = match.indices?.[1] ?? [];
+        let wordText = match[1] || '';
         if (
           rangeStartOffset === undefined ||
           rangeEndOffset === undefined ||
@@ -157,8 +169,8 @@ class SpeedReader {
 
         // For long words with hyphens, split them into smaller chunks at the hyphens.
         if (wordText.length > this.settings.hyphenatedWordLengthThreshold) {
-          while (wordText.match(HYPHENATED_CHARACTER_MATCHER)) {
-            const [wordTextStart, _, ...wordTextRest] = wordText.split(
+          while (HYPHENATED_CHARACTER_MATCHER.test(wordText)) {
+            const [wordTextStart, , ...wordTextRest] = wordText.split(
               HYPHENATED_CHARACTER_MATCHER,
             );
 
@@ -177,15 +189,15 @@ class SpeedReader {
 
         // Determine the delay type based on punctuation.
         let delay: Word['delay'] = 'regular';
-        if (wordText.match(/[\.:!?]\W*$/)) {
+        if (LONG_DELAY_MATCHER.test(wordText)) {
           delay = 'long';
-        } else if (wordText.match(/[,;]\W*$/)) {
+        } else if (SHORT_DELAY_MATCHER.test(wordText)) {
           delay = 'short';
         }
 
         // If the word consists solely of non-word characters (e.g., punctuation), merge it with the previous word and
         // assign it the same delay type, since such characters are typically read together with the preceding word.
-        if (wordText.match(/^\W+$/) && this.words.length > 0) {
+        if (NON_WORD_MATCHER.test(wordText) && this.words.length > 0) {
           const previousWord = {
             ...this.words[this.words.length - 1],
             endTextNode: walker.currentNode,

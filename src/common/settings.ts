@@ -33,29 +33,29 @@ async function get(): Promise<Settings> {
 }
 
 async function update(partialSettings: Partial<Settings>): Promise<void> {
-  const settings = { ...(await get()), ...partialSettings };
+  const fullSettings: Settings = { ...(await get()), ...partialSettings };
 
   // Ensure settings are within valid bounds.
-  settings.wordsPerMinute = Math.min(
+  fullSettings.wordsPerMinute = Math.min(
     MAX_WPM,
-    Math.max(MIN_WPM, settings.wordsPerMinute),
+    Math.max(MIN_WPM, fullSettings.wordsPerMinute),
   );
-  settings.shortDelayMultiplier = Math.min(
-    settings.shortDelayMultiplier,
-    settings.longDelayMultiplier,
+  fullSettings.shortDelayMultiplier = Math.min(
+    fullSettings.shortDelayMultiplier,
+    fullSettings.longDelayMultiplier,
   );
-  settings.longDelayMultiplier = Math.max(
-    settings.shortDelayMultiplier,
-    settings.longDelayMultiplier,
+  fullSettings.longDelayMultiplier = Math.max(
+    fullSettings.shortDelayMultiplier,
+    fullSettings.longDelayMultiplier,
   );
 
   // Only store settings that differ from the defaults, so that updates to the extension will override changes to the
   // defaults but not settings changed by the user.
-  for (const [key, value] of Object.entries(DEFAULT_SETTINGS)) {
-    if (settings[key as keyof Settings] === value) {
-      delete settings[key as keyof Settings];
-    }
-  }
+  const settings: Partial<Settings> = Object.fromEntries(
+    Object.entries(fullSettings).filter(
+      ([key, value]) => value != DEFAULT_SETTINGS[key as keyof Settings],
+    ),
+  );
 
   await browser.storage.sync.set({ settings });
 }
