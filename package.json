@@ -1,6 +1,6 @@
 {
   "name": "yet-another-speed-reader",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Yet another Firefox extension for speed reading",
   "type": "module",
   "repository": {
