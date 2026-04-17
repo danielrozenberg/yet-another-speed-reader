@@ -27,8 +27,8 @@ interface Word {
   delay: 'regular' | 'short' | 'long';
 }
 
-const WORD_CHUNK_MATCHER = /((?:\S\.\s\S{2,})*|\S+)(?:\s+|$)/dgu;
-const HYPHENATED_CHARACTER_MATCHER = /([-/\\])/;
+const WORD_CHUNK_MATCHER =
+  /((?:\S\.\s?)+|[^\s\\/\u2014]+)(?:[\s\\/\u2014]|$)/dgu;
 const LONG_DELAY_MATCHER = /[.:!?]\W*$/;
 const SHORT_DELAY_MATCHER = /[,;]\W*$/;
 const NON_WORD_MATCHER = /^\W+$/;
@@ -169,10 +169,8 @@ class SpeedReader {
 
         // For long words with hyphens, split them into smaller chunks at the hyphens.
         if (wordText.length > this.settings.hyphenatedWordLengthThreshold) {
-          while (HYPHENATED_CHARACTER_MATCHER.test(wordText)) {
-            const [wordTextStart, , ...wordTextRest] = wordText.split(
-              HYPHENATED_CHARACTER_MATCHER,
-            );
+          while (wordText.includes('-')) {
+            const [wordTextStart, , ...wordTextRest] = wordText.split('-');
 
             this.words.push({
               startTextNode: walker.currentNode,
