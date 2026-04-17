@@ -27,10 +27,10 @@ interface Word {
   delay: 'regular' | 'short' | 'long';
 }
 
-const WORD_CHUNK_MATCHER =
-  /((?:\S\.\s?)+|[^\s\\/\u2014]+)(?:[\s\\/\u2014]|$)/dgu;
+const WORD_CHUNK_MATCHER = /((?:\S\.\s?)+|[^\s\\/\u2014]+)([\s\\/\u2014]|$)/dgu;
 const LONG_DELAY_MATCHER = /[.:!?]\W*$/;
-const SHORT_DELAY_MATCHER = /[,;]\W*$/;
+const SHORT_DELAY_MATCHER = /[,;\u2014\\/]\W*$/;
+const NON_WHITESPACE_CHARACTER_MATCHER = /^\S$/;
 const NON_WORD_MATCHER = /^\W+$/;
 const WPM_DELTA = 10;
 
@@ -156,9 +156,9 @@ class SpeedReader {
       }
 
       for (const match of textContent.matchAll(WORD_CHUNK_MATCHER)) {
-        let [rangeStartOffset] = match.indices?.[1] ?? [];
-        const [, rangeEndOffset] = match.indices?.[1] ?? [];
+        let [rangeStartOffset, rangeEndOffset] = match.indices?.[1] ?? [];
         let wordText = match[1] || '';
+        const wordSeparatorCharacter = match[2] || '';
         if (
           rangeStartOffset === undefined ||
           rangeEndOffset === undefined ||
@@ -183,6 +183,12 @@ class SpeedReader {
             wordText = wordTextRest.join('');
             rangeStartOffset += wordTextStart.length + 1;
           }
+        }
+
+        // If the separator is not a whitespace character, include it as part of the current word.
+        if (NON_WHITESPACE_CHARACTER_MATCHER.test(wordSeparatorCharacter)) {
+          wordText += wordSeparatorCharacter;
+          rangeEndOffset += wordSeparatorCharacter.length;
         }
 
         // Determine the delay type based on punctuation.
