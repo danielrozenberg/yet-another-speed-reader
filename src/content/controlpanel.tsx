@@ -1,6 +1,8 @@
 import { Ref, RefObject, ShadowRoot, h } from 'jsx-dom/min';
 
 import { _, url } from '../common/browser';
+import innerCSS from '../../static/styles/controlpanel.inner.css';
+import outerCSS from '../../static/styles/controlpanel.outer.css';
 
 declare const window: Window & {
   controlPanelInstance?: ControlPanel;
@@ -27,10 +29,7 @@ export class ControlPanel extends EventTarget {
       <dialog id="__speed-reader-control-panel">
         <div>
           <ShadowRoot mode="open">
-            <link
-              rel="stylesheet"
-              href={url('styles/controlpanel.inner.css')}
-            />
+            <style>{innerCSS}</style>
             <div class="wrapper">
               <div
                 class="container"
@@ -194,9 +193,7 @@ export function createOrGetControlPanel() {
     return window.controlPanelInstance;
   }
 
-  document.head.appendChild(
-    <link rel="stylesheet" href={url('styles/controlpanel.outer.css')} />,
-  );
+  document.head.appendChild(<style>{outerCSS}</style>);
 
   window.controlPanelInstance = new ControlPanel();
   return window.controlPanelInstance;

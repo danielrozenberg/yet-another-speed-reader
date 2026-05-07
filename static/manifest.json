@@ -23,7 +23,7 @@
   "permissions": ["activeTab", "contextMenus", "scripting", "storage"],
   "web_accessible_resources": [
     {
-      "resources": ["icons/*.svg", "styles/*.css"],
+      "resources": ["icons/*.svg"],
       "matches": ["<all_urls>"]
     }
   ],
