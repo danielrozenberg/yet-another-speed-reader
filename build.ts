@@ -24,5 +24,6 @@ await esbuild.build({
   sourcemap: true,
   outdir: 'dist/',
   outExtension: { '.js': '.mjs' },
+  loader: { '.svg': 'dataurl' },
   plugins: [cssTextPlugin],
 });

@@ -21,12 +21,6 @@
     "page": "options.html"
   },
   "permissions": ["activeTab", "contextMenus", "scripting", "storage"],
-  "web_accessible_resources": [
-    {
-      "resources": ["icons/*.svg"],
-      "matches": ["<all_urls>"]
-    }
-  ],
   "default_locale": "en",
   "browser_specific_settings": {
     "gecko": {

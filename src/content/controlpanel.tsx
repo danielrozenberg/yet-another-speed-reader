@@ -1,8 +1,14 @@
 import { Ref, RefObject, ShadowRoot, h } from 'jsx-dom/min';
 
-import { _, url } from '../common/browser';
+import closeSvg from '../../static/icons/close.svg';
+import fasterSvg from '../../static/icons/faster.svg';
+import pausedSvg from '../../static/icons/paused.svg';
+import runningSvg from '../../static/icons/running.svg';
+import settingsSvg from '../../static/icons/settings.svg';
+import slowerSvg from '../../static/icons/slower.svg';
 import innerCSS from '../../static/styles/controlpanel.inner.css';
 import outerCSS from '../../static/styles/controlpanel.outer.css';
+import { _ } from '../common/browser';
 
 declare const window: Window & {
   controlPanelInstance?: ControlPanel;
@@ -47,7 +53,7 @@ export class ControlPanel extends EventTarget {
                     onClick={() => this.dispatchTypedEvent('open-settings')}
                   >
                     <span class="button-background">
-                      <img src={url('icons/settings.svg')} />
+                      <img src={settingsSvg} />
                     </span>
                   </button>
                 </div>
@@ -59,10 +65,7 @@ export class ControlPanel extends EventTarget {
                     onClick={() => this.dispatchTypedEvent('toggle-pause')}
                   >
                     <span class="button-background">
-                      <img
-                        src={url('icons/running.svg')}
-                        ref={this.#statusImageRef}
-                      />
+                      <img src={runningSvg} ref={this.#statusImageRef} />
                     </span>
                   </button>
                 </div>
@@ -74,7 +77,7 @@ export class ControlPanel extends EventTarget {
                     onClick={() => this.dispatchTypedEvent('increase-wpm')}
                   >
                     <span class="button-background">
-                      <img src={url('icons/faster.svg')} />
+                      <img src={fasterSvg} />
                     </span>
                   </button>
                   <span
@@ -87,7 +90,7 @@ export class ControlPanel extends EventTarget {
                     onClick={() => this.dispatchTypedEvent('decrease-wpm')}
                   >
                     <span class="button-background">
-                      <img src={url('icons/slower.svg')} />
+                      <img src={slowerSvg} />
                     </span>
                   </button>
                 </div>
@@ -99,7 +102,7 @@ export class ControlPanel extends EventTarget {
                     onClick={() => this.#hostElement.close()}
                   >
                     <span class="button-background">
-                      <img src={url('icons/close.svg')} />
+                      <img src={closeSvg} />
                     </span>
                   </button>
                 </div>
@@ -171,9 +174,7 @@ export class ControlPanel extends EventTarget {
 
   setPaused(isPaused: boolean) {
     if (this.#statusImageRef.current) {
-      this.#statusImageRef.current.src = isPaused
-        ? url('icons/paused.svg')
-        : url('icons/running.svg');
+      this.#statusImageRef.current.src = isPaused ? pausedSvg : runningSvg;
     }
   }
 
