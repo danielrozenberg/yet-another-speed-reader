@@ -11,6 +11,8 @@ import outerCSS from '../../static/styles/controlpanel.outer.css';
 import { _ } from '../common/browser';
 import { addTouchGestureListeners } from './touchgestures';
 
+import type { PlaybackState } from './playbackstate';
+
 declare const window: Window & {
   controlPanelInstance?: ControlPanel;
 };
@@ -188,7 +190,7 @@ export class ControlPanel extends EventTarget {
   showActionBar() {
     this.#containerRef.current?.setAttribute('data-state', 'action-bar');
     this.#hostElement.showModal();
-    this.setPaused(false);
+    this.setPlaybackState('running');
   }
 
   showErrorMessage() {
@@ -201,9 +203,11 @@ export class ControlPanel extends EventTarget {
     this.#hostElement.style.setProperty('--range-bottom', `${bottom}px`);
   }
 
-  setPaused(isPaused: boolean) {
+  setPlaybackState(state: PlaybackState) {
     if (this.#statusImageRef.current) {
-      this.#statusImageRef.current.src = isPaused ? pausedSvg : runningSvg;
+      this.#statusImageRef.current.src =
+        state === 'paused' ? pausedSvg : runningSvg;
+      this.#statusImageRef.current.classList.toggle('held', state === 'held');
     }
   }
 

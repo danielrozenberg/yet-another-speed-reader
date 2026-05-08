@@ -7,6 +7,7 @@ import { isTextNodeVisible } from './content/visibility';
 
 import type { Browser } from 'webextension-polyfill';
 import type { Settings } from './common/settings';
+import type { PlaybackState } from './content/playbackstate';
 
 declare const browser: Browser;
 declare const window: Window & {
@@ -14,7 +15,7 @@ declare const window: Window & {
 };
 
 interface State {
-  playbackState: 'running' | 'paused' | 'held';
+  playbackState: PlaybackState;
   tickTimeoutId?: number;
   currentWordIndex: number;
 }
@@ -362,7 +363,7 @@ class SpeedReader {
       return;
     }
     this.logger('Speed reading paused');
-    this.controlPanel.setPaused(true);
+    this.controlPanel.setPlaybackState('paused');
     this.state.playbackState = 'paused';
     clearTimeout(this.state.tickTimeoutId);
     this.state.tickTimeoutId = undefined;
@@ -373,7 +374,7 @@ class SpeedReader {
       return;
     }
     this.logger('Speed reading held');
-    this.controlPanel.setPaused(true);
+    this.controlPanel.setPlaybackState('held');
     this.state.playbackState = 'held';
     clearTimeout(this.state.tickTimeoutId);
     this.state.tickTimeoutId = undefined;
@@ -384,7 +385,7 @@ class SpeedReader {
       return;
     }
     this.logger('Speed reading resumed');
-    this.controlPanel.setPaused(false);
+    this.controlPanel.setPlaybackState('running');
     this.state.playbackState = 'running';
     this.tick();
   }
