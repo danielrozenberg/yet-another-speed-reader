@@ -124,25 +124,29 @@ export class ControlPanel extends EventTarget {
       event.preventDefault();
     });
 
-    addTouchGestureListeners(this.#hostElement, (gesture) => {
-      switch (gesture) {
-        case 'long-press':
-          this.dispatchTypedEvent('start-hold');
-          break;
-        case 'release':
-          this.dispatchTypedEvent('release-hold');
-          break;
-        case 'double-tap':
-          this.dispatchTypedEvent('toggle-pause');
-          break;
-        case 'swipe-left':
-          this.dispatchTypedEvent('previous-word');
-          break;
-        case 'swipe-right':
-          this.dispatchTypedEvent('next-word');
-          break;
-      }
-    });
+    addTouchGestureListeners(
+      this.#hostElement,
+      (gesture) => {
+        switch (gesture) {
+          case 'long-press':
+            this.dispatchTypedEvent('start-hold');
+            break;
+          case 'release':
+            this.dispatchTypedEvent('release-hold');
+            break;
+          case 'double-tap':
+            this.dispatchTypedEvent('toggle-pause');
+            break;
+          case 'swipe-left':
+            this.dispatchTypedEvent('previous-word');
+            break;
+          case 'swipe-right':
+            this.dispatchTypedEvent('next-word');
+            break;
+        }
+      },
+      (event) => event.target === this.#hostElement,
+    );
 
     this.#hostElement.addEventListener('close', () => {
       this.dispatchTypedEvent('close');

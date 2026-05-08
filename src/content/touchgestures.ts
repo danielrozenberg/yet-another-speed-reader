@@ -11,12 +11,13 @@ const DOUBLE_TAP_THRESHOLD_MS = 350;
 export function addTouchGestureListeners(
   element: HTMLElement,
   dispatch: (event: TouchGestureEvent) => void,
+  filter: (event: TouchEvent) => boolean,
 ): void {
   let touchReferenceX = NaN;
   let lastTapTimestamp = NaN;
 
   element.addEventListener('touchstart', (event) => {
-    if (event.touches.length !== 1) {
+    if (event.touches.length !== 1 || !filter(event)) {
       return;
     }
 
@@ -34,7 +35,7 @@ export function addTouchGestureListeners(
   element.addEventListener(
     'touchmove',
     (event) => {
-      if (isNaN(touchReferenceX)) {
+      if (isNaN(touchReferenceX) || !filter(event)) {
         return;
       }
       event.preventDefault();
