@@ -1,4 +1,4 @@
-import { Ref, RefObject, ShadowRoot, h } from 'jsx-dom/min';
+import { RefObject, ShadowRoot, h } from 'jsx-dom/min';
 
 import closeSvg from '../../static/icons/close.svg';
 import fasterSvg from '../../static/icons/faster.svg';
@@ -9,6 +9,7 @@ import slowerSvg from '../../static/icons/slower.svg';
 import innerCSS from '../../static/styles/controlpanel.inner.css';
 import outerCSS from '../../static/styles/controlpanel.outer.css';
 import { _ } from '../common/browser';
+import { addTouchGestureListeners } from './touchgestures';
 
 declare const window: Window & {
   controlPanelInstance?: ControlPanel;
@@ -19,7 +20,11 @@ type ControlPanelEvents =
   | 'toggle-pause'
   | 'increase-wpm'
   | 'decrease-wpm'
-  | 'close';
+  | 'close'
+  | 'start-hold'
+  | 'release-hold'
+  | 'previous-word'
+  | 'next-word';
 
 export class ControlPanel extends EventTarget {
   #hostElement: HTMLDialogElement;
@@ -112,6 +117,30 @@ export class ControlPanel extends EventTarget {
         </div>
       </dialog>,
     ) as HTMLDialogElement;
+
+    this.#hostElement.addEventListener('contextmenu', (event) => {
+      event.preventDefault();
+    });
+
+    addTouchGestureListeners(this.#hostElement, (gesture) => {
+      switch (gesture) {
+        case 'long-press':
+          this.dispatchTypedEvent('start-hold');
+          break;
+        case 'release':
+          this.dispatchTypedEvent('release-hold');
+          break;
+        case 'double-tap':
+          this.dispatchTypedEvent('toggle-pause');
+          break;
+        case 'swipe-left':
+          this.dispatchTypedEvent('previous-word');
+          break;
+        case 'swipe-right':
+          this.dispatchTypedEvent('next-word');
+          break;
+      }
+    });
 
     this.#hostElement.addEventListener('close', () => {
       this.dispatchTypedEvent('close');

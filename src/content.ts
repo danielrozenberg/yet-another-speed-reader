@@ -272,6 +272,38 @@ class SpeedReader {
       },
       { signal },
     );
+    this.controlPanel.addEventListener(
+      'start-hold',
+      () => {
+        this.hold();
+      },
+      { signal },
+    );
+    this.controlPanel.addEventListener(
+      'release-hold',
+      () => {
+        if (this.state.playbackState === 'held') {
+          this.resume();
+        }
+      },
+      { signal },
+    );
+    this.controlPanel.addEventListener(
+      'previous-word',
+      () => {
+        this.state.currentWordIndex--;
+        this.tick();
+      },
+      { signal },
+    );
+    this.controlPanel.addEventListener(
+      'next-word',
+      () => {
+        this.state.currentWordIndex++;
+        this.tick();
+      },
+      { signal },
+    );
   }
 
   private handleKeyup(event: KeyboardEvent) {
@@ -326,7 +358,7 @@ class SpeedReader {
   }
 
   private pause() {
-    if (this.state.playbackState !== 'running') {
+    if (this.state.playbackState === 'paused') {
       return;
     }
     this.logger('Speed reading paused');
@@ -358,6 +390,7 @@ class SpeedReader {
   }
 
   private tick() {
+    this.state.currentWordIndex = Math.max(0, this.state.currentWordIndex);
     if (this.state.currentWordIndex >= this.words.length) {
       this.logger('Speed reading completed');
       this.pause();
