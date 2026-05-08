@@ -292,6 +292,7 @@ class SpeedReader {
     this.controlPanel.addEventListener(
       'previous-word',
       () => {
+        this.hold();
         this.state.currentWordIndex--;
         this.tick();
       },
@@ -300,6 +301,7 @@ class SpeedReader {
     this.controlPanel.addEventListener(
       'next-word',
       () => {
+        this.hold();
         this.state.currentWordIndex++;
         this.tick();
       },
