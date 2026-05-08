@@ -14,7 +14,7 @@ declare const window: Window & {
 };
 
 interface State {
-  isPaused: boolean;
+  playbackState: 'running' | 'paused' | 'held';
   tickTimeoutId?: number;
   currentWordIndex: number;
 }
@@ -35,7 +35,7 @@ const NON_WORD_MATCHER = /^\W+$/;
 const WPM_DELTA = 10;
 
 const DEFAULT_STATE: State = {
-  isPaused: true,
+  playbackState: 'paused',
   currentWordIndex: NaN,
 };
 
@@ -83,15 +83,14 @@ class SpeedReader {
     this.highlight.add(this.range);
 
     this.updateSettings(settings);
-    this.state = { isPaused: false, currentWordIndex };
+    this.state = { playbackState: 'running', currentWordIndex };
 
     window.addEventListener(
       'keydown',
       voidifyAsync(this.handleKeydown.bind(this)),
-      {
-        signal,
-      },
+      { signal },
     );
+    window.addEventListener('keyup', this.handleKeyup.bind(this), { signal });
     this.addControlPanelEventListeners(signal);
 
     this.controlPanel.showActionBar();
@@ -240,7 +239,7 @@ class SpeedReader {
     this.controlPanel.addEventListener(
       'toggle-pause',
       () => {
-        if (this.state.isPaused) {
+        if (this.state.playbackState !== 'running') {
           this.resume();
         } else {
           this.pause();
@@ -275,15 +274,25 @@ class SpeedReader {
     );
   }
 
+  private handleKeyup(event: KeyboardEvent) {
+    if (event.key === 'Control' && this.state.playbackState === 'held') {
+      this.resume();
+    }
+  }
+
   private async handleKeydown(event: KeyboardEvent) {
     switch (event.key) {
       case ' ':
         event.preventDefault();
-        if (this.state.isPaused) {
+        if (this.state.playbackState !== 'running') {
           this.resume();
         } else {
           this.pause();
         }
+        break;
+
+      case 'Control':
+        this.hold();
         break;
 
       case 'ArrowRight':
@@ -317,23 +326,34 @@ class SpeedReader {
   }
 
   private pause() {
-    if (this.state.isPaused) {
+    if (this.state.playbackState !== 'running') {
       return;
     }
     this.logger('Speed reading paused');
     this.controlPanel.setPaused(true);
-    this.state.isPaused = true;
+    this.state.playbackState = 'paused';
+    clearTimeout(this.state.tickTimeoutId);
+    this.state.tickTimeoutId = undefined;
+  }
+
+  private hold() {
+    if (this.state.playbackState !== 'running') {
+      return;
+    }
+    this.logger('Speed reading held');
+    this.controlPanel.setPaused(true);
+    this.state.playbackState = 'held';
     clearTimeout(this.state.tickTimeoutId);
     this.state.tickTimeoutId = undefined;
   }
 
   private resume() {
-    if (!this.state.isPaused) {
+    if (this.state.playbackState === 'running') {
       return;
     }
     this.logger('Speed reading resumed');
     this.controlPanel.setPaused(false);
-    this.state.isPaused = false;
+    this.state.playbackState = 'running';
     this.tick();
   }
 
@@ -355,7 +375,7 @@ class SpeedReader {
     this.range.setEnd(endTextNode, rangeEndOffset);
     this.scrollToRange();
 
-    if (this.state.isPaused) {
+    if (this.state.playbackState !== 'running') {
       return;
     }
 
